@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+
 export default function LeadDetail() {
   const params = useParams();
   const leadId = params.leads;
@@ -54,64 +55,92 @@ export default function LeadDetail() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      {lead ? (
-        <>
-          <h1>Lead Details</h1>
-          {editing ? (
-            <form onSubmit={handleUpdate} style={{ marginBottom: '2rem' }}>
+    <div className="flex items-center justify-center bg-gray-50 px-4 w-full">
+      <div className="w-full p-8 bg-white rounded-lg shadow-md">
+        {lead ? (
+          <>
+            <h1 className="text-3xl font-bold mb-6 text-center">Lead Details</h1>
+            {editing ? (
+              <form onSubmit={handleUpdate} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-lg font-medium text-gray-700">Name:</label>
+                  <input 
+                    id="name"
+                    type="text" 
+                    name="name" 
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email:</label>
+                  <input 
+                    id="email"
+                    type="email" 
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    required 
+                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="status" className="block text-lg font-medium text-gray-700">Status:</label>
+                  <select 
+                    id="status"
+                    name="status" 
+                    value={formData.status} 
+                    onChange={handleChange}
+                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="New">New</option>
+                    <option value="Engaged">Engaged</option>
+                    <option value="Proposal Sent">Proposal Sent</option>
+                    <option value="Closed-Won">Closed-Won</option>
+                    <option value="Closed-Lost">Closed-Lost</option>
+                  </select>
+                </div>
+                <div className="flex justify-between">
+                  <button 
+                    type="submit" 
+                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  >
+                    Save Changes
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setEditing(false)} 
+                    className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
               <div>
-                <label>Name:</label><br/>
-                <input 
-                  type="text" 
-                  name="name" 
-                  value={formData.name} 
-                  onChange={handleChange} 
-                  required 
-                />
+                <div className="space-y-4">
+                  <p><strong className="text-lg">Name:</strong> {lead.name}</p>
+                  <p><strong className="text-lg">Email:</strong> {lead.email}</p>
+                  <p><strong className="text-lg">Status:</strong> {lead.status}</p>
+                  <p><strong className="text-lg">Created At:</strong> {new Date(lead.createdAt).toLocaleString()}</p>
+                </div>
+                <div className="mt-6">
+                  <button 
+                    onClick={() => setEditing(true)} 
+                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
-              <div>
-                <label>Email:</label><br/>
-                <input 
-                  type="email" 
-                  name="email" 
-                  value={formData.email} 
-                  onChange={handleChange} 
-                  required 
-                />
-              </div>
-              <div>
-                <label>Status:</label><br/>
-                <select 
-                  name="status" 
-                  value={formData.status} 
-                  onChange={handleChange}
-                >
-                  <option value="New">New</option>
-                  <option value="Engaged">Engaged</option>
-                  <option value="Proposal Sent">Proposal Sent</option>
-                  <option value="Closed-Won">Closed-Won</option>
-                  <option value="Closed-Lost">Closed-Lost</option>
-                </select>
-              </div>
-              <button type="submit">Save Changes</button>
-              <button type="button" onClick={() => setEditing(false)} style={{ marginLeft: '1rem' }}>
-                Cancel
-              </button>
-            </form>
-          ) : (
-            <div>
-              <p><strong>Name:</strong> {lead.name}</p>
-              <p><strong>Email:</strong> {lead.email}</p>
-              <p><strong>Status:</strong> {lead.status}</p>
-              <p><strong>Created At:</strong> {new Date(lead.createdAt).toLocaleString()}</p>
-              <button onClick={() => setEditing(true)}>Edit</button>
-            </div>
-          )}
-        </>
-      ) : (
-        <p>Loading lead...</p>
-      )}
+            )}
+          </>
+        ) : (
+          <p className="text-center">Loading lead...</p>
+        )}
+      </div>
     </div>
   );
 }

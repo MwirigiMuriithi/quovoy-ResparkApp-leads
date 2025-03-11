@@ -1,7 +1,11 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import LeadForm from "@/components/LeadForm";
+import LeadStatus from "@/components/LeadStatus";
+import Notification from "@/components/Notification";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function LeadDetail() {
   const params = useParams();
@@ -15,6 +19,19 @@ export default function LeadDetail() {
   const [success, setSuccess] = useState("");
   const router = useRouter();
 
+  const statusOptions = ["New", "Engaged", "Proposal Sent", "Closed-Won", "Closed-Lost"];
+
+  useEffect(() => {
+    if (error) {
+      const errorTimeout = setTimeout(() => setError(""), 2000);
+      return () => clearTimeout(errorTimeout);
+    }
+    if (success) {
+      const successTimeout = setTimeout(() => setSuccess(""), 2000);
+      return () => clearTimeout(successTimeout);
+    }
+  }, [error, success]);
+
   useEffect(() => {
     if (!leadId) return;
     const fetchLead = async () => {
@@ -23,11 +40,7 @@ export default function LeadDetail() {
         if (!res.ok) throw new Error("Lead not found");
         const data = await res.json();
         setLead(data);
-        setFormData({
-          name: data.name,
-          email: data.email,
-          status: data.status,
-        });
+        setFormData({ name: data.name, email: data.email, status: data.status });
       } catch (error) {
         setError(error.message);
       }
@@ -35,16 +48,6 @@ export default function LeadDetail() {
 
     fetchLead();
   }, [leadId]);
-
-  useEffect(() => {
-    if (error || success) {
-      const timer = setTimeout(() => {
-        setError("");
-        setSuccess("");
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error, success]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -105,116 +108,31 @@ export default function LeadDetail() {
   return (
     <div className="flex items-center justify-center bg-gray-50 px-4 w-full">
       <div className="w-full p-8 bg-white rounded-lg shadow-md">
-        {error && <p className="text-red-600 text-center">{error}</p>}
-        {success && <p className="text-green-600 text-center">{success}</p>}
+        <Notification message={error || success} type={error ? "error" : "success"} />
+        
         {lead ? (
           <>
-            <h1 className="text-3xl font-bold mb-6 text-center">
-              Lead Details
-            </h1>
+            <h1 className="text-3xl font-bold mb-6 text-center">Lead Details</h1>
             {editing ? (
-              <form onSubmit={handleUpdate} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-lg font-medium text-gray-700"
-                  >
-                    Name:
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-lg font-medium text-gray-700"
-                  >
-                    Email:
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="status"
-                    className="block text-lg font-medium text-gray-700"
-                  >
-                    Status:
-                  </label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="New">New</option>
-                    <option value="Engaged">Engaged</option>
-                    <option value="Proposal Sent">Proposal Sent</option>
-                    <option value="Closed-Won">Closed-Won</option>
-                    <option value="Closed-Lost">Closed-Lost</option>
-                  </select>
-                </div>
-
-                <div className="flex justify-between">
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                    disabled={loading}
-                  >
-                    {loading ? "Updating..." : "Save Changes"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditing(false)}
-                    className="px-6 py-3 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+              <LeadForm
+                formData={formData}
+                handleChange={handleChange}
+                handleSubmit={handleUpdate}
+                loading={loading}
+                statusOptions={statusOptions}
+              />
             ) : (
-              <div>
+              <>
                 <div className="space-y-4">
-                  <p>
-                    <strong className="text-lg">Name:</strong> {lead.name}
-                  </p>
-                  <p>
-                    <strong className="text-lg">Email:</strong> {lead.email}
-                  </p>
-                  <div>
-                    <strong className="text-lg">Status:</strong>
-                    <select
-                      value={lead.status}
-                      onChange={handleStatusChange}
-                      className="ml-3 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled={statusUpdating}
-                    >
-                      <option value="New">New</option>
-                      <option value="Engaged">Engaged</option>
-                      <option value="Proposal Sent">Proposal Sent</option>
-                      <option value="Closed-Won">Closed-Won</option>
-                      <option value="Closed-Lost">Closed-Lost</option>
-                    </select>
-                  </div>
-                  <p>
-                    <strong className="text-lg">Created At:</strong>{" "}
-                    {new Date(lead.createdAt).toLocaleString()}
-                  </p>
+                  <p><strong className="text-lg">Name:</strong> {lead.name}</p>
+                  <p><strong className="text-lg">Email:</strong> {lead.email}</p>
+                  <LeadStatus
+                    status={lead.status}
+                    handleStatusChange={handleStatusChange}
+                    statusOptions={statusOptions}
+                    statusUpdating={statusUpdating}
+                  />
+                  <p><strong className="text-lg">Created At:</strong> {new Date(lead.createdAt).toLocaleString()}</p>
                 </div>
                 <div className="mt-6">
                   <button
@@ -224,11 +142,11 @@ export default function LeadDetail() {
                     Edit
                   </button>
                 </div>
-              </div>
+              </>
             )}
           </>
         ) : (
-          <p className="text-center">Loading lead...</p>
+          <LoadingSpinner />
         )}
       </div>
     </div>

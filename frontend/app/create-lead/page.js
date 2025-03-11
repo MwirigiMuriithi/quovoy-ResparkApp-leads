@@ -1,43 +1,63 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function CreateLead() {
   const [formData, setFormData] = useState({ name: '', email: '', status: 'New' });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
 
-  const handleChange = e => {
+  useEffect(() => {
+    if (error || success) {
+      const timer = setTimeout(() => {
+        setError('');
+        setSuccess('');
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [error, success]);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
+    setSuccess('');
+
     try {
       const res = await fetch('http://localhost:5000/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
+
       if (!res.ok) {
         const errorData = await res.json();
-        console.error("Error adding lead:", errorData);
-      } else {
-        setFormData({ name: '', email: '', status: 'New' });
-        router.push('/'); 
+        throw new Error(errorData.error || 'Failed to add lead');
       }
+
+      setFormData({ name: '', email: '', status: 'New' });
+      setSuccess('Lead added successfully!');
+      setTimeout(() => router.push('/'), 500);
     } catch (error) {
-      console.error("Error adding lead:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
     <div className="p-8 w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-semibold text-center mb-6">Create Lead</h1>
+      {error && <p className="text-red-600 text-center">{error}</p>}
+      {success && <p className="text-green-600 text-center">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="name" className="block text-lg font-medium text-gray-700">Name:</label>

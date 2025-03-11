@@ -36,35 +36,41 @@ export default function CreateLead() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Create Lead</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
+    <div className="p-8 w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md">
+      <h1 className="text-3xl font-semibold text-center mb-6">Create Lead</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label>Name:</label><br />
+          <label htmlFor="name" className="block text-lg font-medium text-gray-700">Name:</label>
           <input
+            id="name"
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
-          <label>Email:</label><br />
+          <label htmlFor="email" className="block text-lg font-medium text-gray-700">Email:</label>
           <input
+            id="email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div>
-          <label>Status:</label><br />
+          <label htmlFor="status" className="block text-lg font-medium text-gray-700">Status:</label>
           <select
+            id="status"
             name="status"
             value={formData.status}
             onChange={handleChange}
+            className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="New">New</option>
             <option value="Engaged">Engaged</option>
@@ -73,7 +79,13 @@ export default function CreateLead() {
             <option value="Closed-Lost">Closed-Lost</option>
           </select>
         </div>
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-3 mt-4 text-white font-semibold rounded-md transition-all duration-300 ${
+            loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+        >
           {loading ? "Adding Lead..." : "Add Lead"}
         </button>
       </form>

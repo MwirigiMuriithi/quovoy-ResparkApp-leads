@@ -21,13 +21,16 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Leads List</h1>
-      <ul>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6">Leads List</h1>
+      <ul className="space-y-4">
         {leads.map(lead => (
-          <li key={lead._id} style={{ marginBottom: '1rem' }}>
-            <Link href={`/leads/${lead._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <strong>{lead.name}</strong> - {lead.email} - {lead.status} - {new Date(lead.createdAt).toLocaleString()}
+          <li key={lead._id} className="p-4 bg-white rounded-lg shadow-md hover:bg-gray-200 transition">
+            <Link href={`/leads/${lead._id}`} className="text-gray-800 hover:text-blue-600">
+              <strong className="block text-lg">{lead.name}</strong>
+              <p className="text-sm text-gray-600">{lead.email}</p>
+              <p className="text-sm text-gray-600">{lead.status}</p>
+              <p className="text-xs text-gray-500">{new Date(lead.createdAt).toLocaleString()}</p>
             </Link>
           </li>
         ))}

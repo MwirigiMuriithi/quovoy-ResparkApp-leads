@@ -11,7 +11,11 @@
 │   ├── loading.jsx
 │   └── page.js
 ├── components
-│   └── Navbar.js
+│   ├── LeadForm.js
+│   ├── LeadStatus.js
+│   ├── LoadingSpinner.js
+│   ├── Navbar.js
+│   └── Notification.js
 ├── jsconfig.json
 ├── next.config.mjs
 ├── package.json
@@ -26,4 +30,4 @@
 │   └── window.svg
 └── README.md
 
-7 directories, 20 files
+7 directories, 24 files

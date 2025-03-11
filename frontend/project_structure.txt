@@ -8,6 +8,7 @@
 │   ├── leads
 │   │   └── [leads]
 │   │       └── page.js
+│   ├── loading.jsx
 │   └── page.js
 ├── components
 │   └── Navbar.js
@@ -25,4 +26,4 @@
 │   └── window.svg
 └── README.md
 
-7 directories, 19 files
+7 directories, 20 files

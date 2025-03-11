@@ -1,0 +1,28 @@
+.
+├── app
+│   ├── create-lead
+│   │   └── page.js
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.js
+│   ├── leads
+│   │   └── [leads]
+│   │       └── page.js
+│   └── page.js
+├── components
+│   └── Navbar.js
+├── jsconfig.json
+├── next.config.mjs
+├── package.json
+├── package-lock.json
+├── postcss.config.mjs
+├── project_structure.txt
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+└── README.md
+
+7 directories, 19 files

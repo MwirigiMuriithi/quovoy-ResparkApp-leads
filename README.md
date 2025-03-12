@@ -6,7 +6,7 @@ You can view the live application here:
 
 [Lead Management App (Frontend)](<https://leads-quovoy-frontend.vercel.app/>)
 
-(The backend is deployed on Railway and is connected to the frontend.)
+(The backend is deployed on Render and is connected to the frontend.)
 
 ## Project Setup
 
@@ -81,4 +81,4 @@ cd quovoy-ResparkApp-leads
 * **Backend:** Node.js, Express, MongoDB (Mongoose).
 * **Frontend:** Next.js.
 * **Database:** MongoDB.
-* **Deployment:** Vercel (Frontend), Railway (Backend).
+* **Deployment:** Vercel (Frontend), Render (Backend).
